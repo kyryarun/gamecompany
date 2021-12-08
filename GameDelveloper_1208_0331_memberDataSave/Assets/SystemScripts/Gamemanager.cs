@@ -75,6 +75,10 @@ public class Gamemanager : MonoBehaviour
     public member_data member_Data; //멤버의 데이터 관리 스크립트
     public bool TestBool;
 
+    //선택지 관리
+    public distrator_manager distrator_Manager; //선택지 관리 스크립트
+
+
     public void set_gold()
     {
         gold_text.text = player_gold.ToString();

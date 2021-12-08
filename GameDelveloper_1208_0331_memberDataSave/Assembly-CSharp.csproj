@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{345613C7-46C2-733E-4D5C-040FD3D7FC59}</ProjectGuid>
+    <ProjectGuid>{F45B9316-0C73-5440-B3B7-1C69517CD5AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -118,6 +118,8 @@
     <Compile Include="Assets\SystemScripts\PlayMusicOperator.cs" />
     <Compile Include="Assets\SystemScripts\audio_set.cs" />
     <Compile Include="Assets\SystemScripts\button.cs" />
+    <Compile Include="Assets\SystemScripts\choice\distrator.cs" />
+    <Compile Include="Assets\SystemScripts\choice\distrator_manager.cs" />
     <Compile Include="Assets\SystemScripts\datasave\JsonSave\DataManager.cs" />
     <Compile Include="Assets\SystemScripts\datasave\JsonSave\GameData.cs" />
     <Compile Include="Assets\SystemScripts\datasave\JsonSave\PlayData.cs" />
