@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+
+
 [Serializable]
 public struct Character_Status
 {
@@ -19,7 +21,7 @@ public class GameData
 {
 
     // 업적 or 엔딩 클리어 여부
-    public bool isAcivment_1;  // 게임 데이터에서 관리
+    public bool isAcivment_1;
     public bool isAcivment_2;
     public bool isAcivment_3;
     public bool isAcivment_4;
@@ -45,7 +47,7 @@ public class GameData
 
     //public Level Character_Level_5;  // 플레이어 등급
     //public Character_Status Character_Status_5;  // 아트
-
+    
 }
 
 

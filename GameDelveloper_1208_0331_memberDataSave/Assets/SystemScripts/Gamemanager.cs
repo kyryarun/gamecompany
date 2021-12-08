@@ -521,7 +521,7 @@ public class Gamemanager : MonoBehaviour
 
         PlayDataManager PlayInstance = PlayDataManager.Play_Instance;
 
-        if(!PlayInstance.PlayFileCheck())
+        if (!PlayInstance.PlayFileCheck())
         {
             PlayInstance.SaveGameData();
         }

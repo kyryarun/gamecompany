@@ -19,7 +19,7 @@ public class level_select : MonoBehaviour
     }
 
     public void set_level(LEVEL level) //난이도버튼을 누르면 현재 레벨을 바꾸는 함수
-                                       //난이도 변경시 다른곳에서 불려진다.
+        //난이도 변경시 다른곳에서 불려진다.
     {
         cur_level = level;
     }
@@ -43,9 +43,6 @@ public class level_select : MonoBehaviour
     public void easy_level()
     {
         //이지일때 달라지는것들을 여기서 변경한다.
-        // 최대 일수
-        // 목표 수치
-        // 기본 소지금
     }
 
     public void normal_level()
