@@ -518,15 +518,24 @@ public class Gamemanager : MonoBehaviour
 
     public void PlayDataSave()  // 특정 상황일 때 게임 플레이 데이터를 저장한다.
     {
+
         PlayDataManager PlayInstance = PlayDataManager.Play_Instance;
+
+        if(!PlayInstance.PlayFileCheck())
+        {
+            PlayInstance.SaveGameData();
+        }
+
+        member_Data.playdata_set();
+
         // 골드 저장
         PlayInstance.playData.Own_Coin = player_gold;
         // 포션 개수 저장
         PlayInstance.playData.Tired_Potion_1 = inventory.slots[0].itemCount;
         PlayInstance.playData.Tired_Potion_2 = inventory.slots[1].itemCount;
         PlayInstance.playData.Tired_Potion_3 = inventory.slots[2].itemCount;
-        PlayInstance.playData.Resurrection_Potion_4 = inventory.slots[3].itemCount;
-        PlayInstance.playData.Power_Up_Potion_5 = inventory.slots[4].itemCount;
+        //PlayInstance.playData.Resurrection_Potion_4 = inventory.slots[3].itemCount;
+        //PlayInstance.playData.Power_Up_Potion_5 = inventory.slots[4].itemCount;
         // 진행 상황 저장
         PlayInstance.playData.Goal_Complete = goal_complete;  // 목표 완성도
         PlayInstance.playData.Goal_Fun = goal_fun;  // 목표 재미
@@ -535,14 +544,19 @@ public class Gamemanager : MonoBehaviour
 
         PlayInstance.playData.Cur_Fun = now_fun;  // 현재 재미
         PlayInstance.playData.Cur_Day = cycle_time;  // 날짜
-        //PlayInstance.playData.Cur_Quarter ;  // 이건 모르겠음 분기
-        PlayInstance.playData.Cur_Level = (int)Game_Level.cur_level; // 0 = 노말 1 = 어려움 2 = 매우 어려움  //난이도 저장
+                                                     //PlayInstance.playData.Cur_Quarter ;  // 이건 모르겠음 분기
+                                                     //PlayInstance.playData.Cur_Level = (int)Game_Level.cur_level; // 0 = 노말 1 = 어려움 2 = 매우 어려움  //난이도 저장
 
         // 캐릭터 능력치 저장
         for (int i = 0; i < members.Count; i++)
         {
             PlayInstance.playData.character_Status_Plays[i] = members[i].character_Status_play;
         }
+        //PlayInstance.playData.Character_PlayData_1 = members[0].character_Status_play;
+        //PlayInstance.playData.Character_PlayData_2 = members[1].character_Status_play;
+        //PlayInstance.playData.Character_PlayData_3 = members[2].character_Status_play;
+        //PlayInstance.playData.Character_PlayData_4 = members[3].character_Status_play;
+        //PlayInstance.playData.Character_PlayData_5 = members[4].character_Status_play;
 
         PlayInstance.SaveGameData();
     }
@@ -551,28 +565,31 @@ public class Gamemanager : MonoBehaviour
     {
         PlayDataManager PlayInstance = PlayDataManager.Play_Instance;
 
-        PlayInstance.LoadGameData();
-
-        // 골드 불러오기
-        player_gold = PlayInstance.playData.Own_Coin;
-        // 아이템 불러오기
-        inventory.slots[0].itemCount = PlayInstance.playData.Tired_Potion_1;
-        inventory.slots[1].itemCount = PlayInstance.playData.Tired_Potion_2;
-        inventory.slots[2].itemCount = PlayInstance.playData.Tired_Potion_3;
-        inventory.slots[3].itemCount = PlayInstance.playData.Resurrection_Potion_4;
-        inventory.slots[4].itemCount = PlayInstance.playData.Power_Up_Potion_5;
-        // 진행 상황 불러오기
-        goal_complete = PlayInstance.playData.Goal_Complete;
-        goal_fun = PlayInstance.playData.Goal_Fun;
-        now_complete = PlayInstance.playData.Cur_Complete;
-        now_fun = PlayInstance.playData.Cur_Fun;
-        cycle_time = PlayInstance.playData.Cur_Day;
-        // Quater = PlayInstance.playData.Cur_Quarter;  // 분기
-        Game_Level.cur_level = (level_select.LEVEL)PlayInstance.playData.Cur_Level;  // 난이도
-
-        for(int i = 0; i < members.Count; i++)
+        if (PlayInstance.LoadGameData())
         {
-            members[i].character_Status_play = PlayInstance.playData.character_Status_Plays[i];
+
+            // 골드 불러오기
+            player_gold = PlayInstance.playData.Own_Coin;
+            // 아이템 불러오기
+            inventory.slots[0].itemCount = PlayInstance.playData.Tired_Potion_1;
+            inventory.slots[1].itemCount = PlayInstance.playData.Tired_Potion_2;
+            inventory.slots[2].itemCount = PlayInstance.playData.Tired_Potion_3;
+            //inventory.slots[3].itemCount = PlayInstance.playData.Resurrection_Potion_4;
+            //inventory.slots[4].itemCount = PlayInstance.playData.Power_Up_Potion_5;
+            // 진행 상황 불러오기
+            goal_complete = PlayInstance.playData.Goal_Complete;
+            goal_fun = PlayInstance.playData.Goal_Fun;
+            now_complete = PlayInstance.playData.Cur_Complete;
+            now_fun = PlayInstance.playData.Cur_Fun;
+            cycle_time = PlayInstance.playData.Cur_Day;
+            // Quater = PlayInstance.playData.Cur_Quarter;  // 분기
+            //Game_Level.cur_level = (level_select.LEVEL)PlayInstance.playData.Cur_Level;  // 난이도
+
+            for (int i = 0; i < members.Count; i++)
+            {
+                members[i].character_Status_play = PlayInstance.playData.character_Status_Plays[i];
+                members[i].after_load_data();
+            }
         }
 
     }

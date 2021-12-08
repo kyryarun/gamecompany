@@ -20,6 +20,11 @@ public class member_data : MonoBehaviour
     //리스트를 사용하여 각 멤버들에게 접근하도록 하였다.
 
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+    }
+
     void Start()
     {
         playDatamanager = PlayDataManager.Play_Instance;
@@ -92,7 +97,7 @@ public class member_data : MonoBehaviour
         {
             playDatamanager.playData.character_Status_Plays.Add(Gamemanager.GetInstance().members[i].character_Status_play);
         }
-        playdata_save();
+
     }
 
     public void playdata_save() //리스트에 데이터를 넣는 부분. 실제로 저장한다.
@@ -118,7 +123,7 @@ public class member_data : MonoBehaviour
             //Debug.Log(i + "번 이후" + Gamemanager.GetInstance().members[i].character_Status_play.Cur_Tired);
             //Gamemanager.GetInstance().members[i].character_Status_play.isRetired = playDatamanager.playData.character_Status_Plays[i].isRetired;
 
-            Gamemanager.GetInstance().members[i].character_Status_play = playDatamanager.playData.character_Status_Plays[i];
+            //Gamemanager.GetInstance().members[i].character_Status_play = playDatamanager.playData.character_Status_Plays[i];
             Gamemanager.GetInstance().members[i].after_load_data();
         }
         Debug.Log("게임 플레이 로드 성공");

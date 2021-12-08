@@ -57,17 +57,19 @@ public class PlayDataManager : MonoBehaviour
         Debug.Log($"Data Path : {Application.persistentDataPath}");
     }
 
-    public void LoadGameData()
+    public bool LoadGameData()
     {
         if (File.Exists(PlayData_FilePath))
         {
             Debug.Log("불러오기 성공");
             string FromJsonData = File.ReadAllText(PlayData_FilePath);
             _playData = JsonUtility.FromJson<PlayData>(FromJsonData);
+            return true;
         }
         else
         {
             Debug.Log("불러오기 실패");
+            return false;
         }
     }
 
@@ -86,7 +88,6 @@ public class PlayDataManager : MonoBehaviour
             string ToJsonData = JsonUtility.ToJson(playData);
 
             File.WriteAllText(PlayData_FilePath, ToJsonData);
-            Debug.Log("세이브 생성 후 저장완료");
         }
     }
 
@@ -107,10 +108,5 @@ public class PlayDataManager : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    private void OnApplicationQuit()
-    {
-        SaveGameData();
     }
 }
