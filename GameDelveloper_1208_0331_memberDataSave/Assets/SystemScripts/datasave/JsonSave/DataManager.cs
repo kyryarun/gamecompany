@@ -5,6 +5,7 @@ using System.IO;
 
 public class DataManager : MonoBehaviour
 {
+    public string GameData_FilePath;
     static GameObject _container;
     static GameObject Container
     {
@@ -46,6 +47,11 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        GameData_FilePath = Application.persistentDataPath + GameDataFileName;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,12 +62,10 @@ public class DataManager : MonoBehaviour
 
     public void LoadGameData()
     {
-        string filePath = Application.persistentDataPath + GameDataFileName;
-
-        if (File.Exists(filePath))
+        if (File.Exists(GameData_FilePath))
         {
             Debug.Log("불러오기 성공");
-            string FromJsonData = File.ReadAllText(filePath);
+            string FromJsonData = File.ReadAllText(GameData_FilePath);
             _gameData = JsonUtility.FromJson<GameData>(FromJsonData);
         }
         else
@@ -74,9 +78,8 @@ public class DataManager : MonoBehaviour
     public void SaveGameData()
     {
         string ToJsonData = JsonUtility.ToJson(gameData);
-        string filepath = Application.persistentDataPath + GameDataFileName;
 
-        File.WriteAllText(filepath, ToJsonData);
+        File.WriteAllText(GameData_FilePath, ToJsonData);
         Debug.Log("저장완료");
     }
 

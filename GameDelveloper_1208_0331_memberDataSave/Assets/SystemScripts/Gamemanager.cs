@@ -16,6 +16,7 @@ public class Gamemanager : MonoBehaviour
 
     public work_list work_List; //백업.
     public Event_list event_List;
+    public level_select Game_Level;
 
     //멤버 설정
     public List<member> members;
@@ -40,7 +41,7 @@ public class Gamemanager : MonoBehaviour
     public bool end_time; //엔딩시간이 되었다는 표시.
     public bool the_end; //끝이라는 표시
 
-    public int total_event =0; //전체 이벤트의 횟수
+    public int total_event = 0; //전체 이벤트의 횟수
 
     public int retire_limit; //리타이어 게임오버 제한 인원
 
@@ -110,7 +111,7 @@ public class Gamemanager : MonoBehaviour
 
     public void PlayDataCheck()
     {
-        if(PlayDataManager.Play_Instance.PlayFileCheck())
+        if (PlayDataManager.Play_Instance.PlayFileCheck())
         {
             Debug.Log("플레이 데이터 존재");
         }
@@ -135,7 +136,7 @@ public class Gamemanager : MonoBehaviour
 
     public void PlayDataDelete()
     {
-        if(PlayDataManager.Play_Instance.DeleteGameData())
+        if (PlayDataManager.Play_Instance.DeleteGameData())
             Debug.Log("게임 플레이 삭제 성공");
     }
 
@@ -333,7 +334,7 @@ public class Gamemanager : MonoBehaviour
 
     public void next_statin() //한번의 행동(업무와 이벤트)가 끝나면 다음 행동으로 넘어가는 함수.
     {
-        if (end_work && start_event && end_event&&end_step)
+        if (end_work && start_event && end_event && end_step)
         {
             for (int i = 0; i < members.Count; i++)
             {
@@ -396,28 +397,28 @@ public class Gamemanager : MonoBehaviour
         }
         if (end_time)
         {
-            
-                UIManager.GetIntstance().m_Game_State_UI[0].SetActive(false);//게임플레이 화면 끄기
 
-                //if ((now_complete >= goal_complete) && (now_fun >= goal_fun))
-                //{
-                //    Debug.Log("승진!!!");
-                //}
-                //else if (now_complete >= goal_complete && now_fun >= 40)
-                //{
-                //    Debug.Log("근속!");
-                //}
-                //else if (now_complete >= 80 && now_fun >= 80)
-                //{
-                //    Debug.Log("근속!");
-                //}
-                //else
-                //{
-                //    Debug.Log("퇴사....");
-                //}
-                the_end = true;
-            }
-        
+            UIManager.GetIntstance().m_Game_State_UI[0].SetActive(false);//게임플레이 화면 끄기
+
+            //if ((now_complete >= goal_complete) && (now_fun >= goal_fun))
+            //{
+            //    Debug.Log("승진!!!");
+            //}
+            //else if (now_complete >= goal_complete && now_fun >= 40)
+            //{
+            //    Debug.Log("근속!");
+            //}
+            //else if (now_complete >= 80 && now_fun >= 80)
+            //{
+            //    Debug.Log("근속!");
+            //}
+            //else
+            //{
+            //    Debug.Log("퇴사....");
+            //}
+            the_end = true;
+        }
+
     }
 
     public void restart_game() //게임 재시작
@@ -484,14 +485,14 @@ public class Gamemanager : MonoBehaviour
 
     public void Now_Member_Back_Setting()
     {
-        if(!end_work && now_member)
+        if (!end_work && now_member)
         {
             now_member.Now_member_Obj.SetActive(true);
 
-            if(pre_member)
+            if (pre_member)
                 pre_member.Now_member_Obj.SetActive(false);
         }
-        else if(pre_member)
+        else if (pre_member)
         {
             pre_member.Now_member_Obj.SetActive(false);
         }
@@ -513,5 +514,66 @@ public class Gamemanager : MonoBehaviour
     public void endstep() //버튼에 추가할 함수
     {
         end_step = true;
+    }
+
+    public void PlayDataSave()  // 특정 상황일 때 게임 플레이 데이터를 저장한다.
+    {
+        PlayDataManager PlayInstance = PlayDataManager.Play_Instance;
+        // 골드 저장
+        PlayInstance.playData.Own_Coin = player_gold;
+        // 포션 개수 저장
+        PlayInstance.playData.Tired_Potion_1 = inventory.slots[0].itemCount;
+        PlayInstance.playData.Tired_Potion_2 = inventory.slots[1].itemCount;
+        PlayInstance.playData.Tired_Potion_3 = inventory.slots[2].itemCount;
+        PlayInstance.playData.Resurrection_Potion_4 = inventory.slots[3].itemCount;
+        PlayInstance.playData.Power_Up_Potion_5 = inventory.slots[4].itemCount;
+        // 진행 상황 저장
+        PlayInstance.playData.Goal_Complete = goal_complete;  // 목표 완성도
+        PlayInstance.playData.Goal_Fun = goal_fun;  // 목표 재미
+        PlayInstance.playData.Cur_Complete = now_complete;  // 현재 완성도
+        PlayInstance.playData.Retired_Count = retire_number;
+
+        PlayInstance.playData.Cur_Fun = now_fun;  // 현재 재미
+        PlayInstance.playData.Cur_Day = cycle_time;  // 날짜
+        //PlayInstance.playData.Cur_Quarter ;  // 이건 모르겠음 분기
+        PlayInstance.playData.Cur_Level = (int)Game_Level.cur_level; // 0 = 노말 1 = 어려움 2 = 매우 어려움  //난이도 저장
+
+        // 캐릭터 능력치 저장
+        for (int i = 0; i < members.Count; i++)
+        {
+            PlayInstance.playData.character_Status_Plays[i] = members[i].character_Status_play;
+        }
+
+        PlayInstance.SaveGameData();
+    }
+
+    public void PlayDataLoad()
+    {
+        PlayDataManager PlayInstance = PlayDataManager.Play_Instance;
+
+        PlayInstance.LoadGameData();
+
+        // 골드 불러오기
+        player_gold = PlayInstance.playData.Own_Coin;
+        // 아이템 불러오기
+        inventory.slots[0].itemCount = PlayInstance.playData.Tired_Potion_1;
+        inventory.slots[1].itemCount = PlayInstance.playData.Tired_Potion_2;
+        inventory.slots[2].itemCount = PlayInstance.playData.Tired_Potion_3;
+        inventory.slots[3].itemCount = PlayInstance.playData.Resurrection_Potion_4;
+        inventory.slots[4].itemCount = PlayInstance.playData.Power_Up_Potion_5;
+        // 진행 상황 불러오기
+        goal_complete = PlayInstance.playData.Goal_Complete;
+        goal_fun = PlayInstance.playData.Goal_Fun;
+        now_complete = PlayInstance.playData.Cur_Complete;
+        now_fun = PlayInstance.playData.Cur_Fun;
+        cycle_time = PlayInstance.playData.Cur_Day;
+        // Quater = PlayInstance.playData.Cur_Quarter;  // 분기
+        Game_Level.cur_level = (level_select.LEVEL)PlayInstance.playData.Cur_Level;  // 난이도
+
+        for(int i = 0; i < members.Count; i++)
+        {
+            members[i].character_Status_play = PlayInstance.playData.character_Status_Plays[i];
+        }
+
     }
 }

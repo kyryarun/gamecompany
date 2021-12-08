@@ -5,6 +5,7 @@ using System.IO;
 
 public class PlayDataManager : MonoBehaviour
 {
+    public string PlayData_FilePath;
     static GameObject _Play_container;
     static GameObject Play_Container
     {
@@ -39,53 +40,61 @@ public class PlayDataManager : MonoBehaviour
         {
             if (_playData == null)
             {
-                LoadGameData();
                 SaveGameData();
             }
             return _playData;
         }
     }
 
+    private void Awake()
+    {
+        PlayData_FilePath = Application.persistentDataPath + GameDataFileName;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log($"Data Path : {Application.persistentDataPath}");
-        //LoadGameData();
-        //SaveGameData();
     }
 
     public void LoadGameData()
     {
-        string filePath = Application.persistentDataPath + GameDataFileName;
-
-        if (File.Exists(filePath))
+        if (File.Exists(PlayData_FilePath))
         {
             Debug.Log("불러오기 성공");
-            string FromJsonData = File.ReadAllText(filePath);
+            string FromJsonData = File.ReadAllText(PlayData_FilePath);
             _playData = JsonUtility.FromJson<PlayData>(FromJsonData);
         }
         else
         {
-            Debug.Log("새로운 파일 생성");
-            _playData = new PlayData();
+            Debug.Log("불러오기 실패");
         }
     }
 
     public void SaveGameData()
     {
-        string ToJsonData = JsonUtility.ToJson(playData);
-        string filepath = Application.persistentDataPath + GameDataFileName;
+        if (File.Exists(PlayData_FilePath))
+        {
+            string ToJsonData = JsonUtility.ToJson(playData);
 
-        File.WriteAllText(filepath, ToJsonData);
-        Debug.Log("저장완료");
+            File.WriteAllText(PlayData_FilePath, ToJsonData);
+            Debug.Log("저장완료");
+        }
+        else
+        {
+            _playData = new PlayData();
+            string ToJsonData = JsonUtility.ToJson(playData);
+
+            File.WriteAllText(PlayData_FilePath, ToJsonData);
+            Debug.Log("세이브 생성 후 저장완료");
+        }
     }
 
     public bool DeleteGameData()  // filePath 에 해당하는 데이터 삭제 (삭제 완료시 True 반환)
     {
-        string filePath = Application.persistentDataPath + GameDataFileName;
-        if (File.Exists(filePath))
+        if (File.Exists(PlayData_FilePath))
         {
-            File.Delete(filePath);
+            File.Delete(PlayData_FilePath);
             return true;
         }
         return false;
@@ -93,8 +102,7 @@ public class PlayDataManager : MonoBehaviour
 
     public bool PlayFileCheck()
     {
-        string filePath = Application.persistentDataPath + GameDataFileName;
-        if (File.Exists(filePath))
+        if (File.Exists(PlayData_FilePath))
         {
             return true;
         }
@@ -103,6 +111,6 @@ public class PlayDataManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        //SaveGameData();
+        SaveGameData();
     }
 }

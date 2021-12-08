@@ -45,7 +45,7 @@ public class member : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -123,7 +123,7 @@ public class member : MonoBehaviour
                 else
                 {
                     select_event_number = 4;
-                    
+
                 }
             }
             else
@@ -150,7 +150,7 @@ public class member : MonoBehaviour
                     }
                 }
             }
-            
+
             isevent = true;
         }
     }
@@ -266,10 +266,5 @@ public class member : MonoBehaviour
     {
         tired_parameter = character_Status_play.Cur_Tired;
         isretire = character_Status_play.isRetired;
-    }
-
-    public void after_load_gamedata()
-    {
-
     }
 }

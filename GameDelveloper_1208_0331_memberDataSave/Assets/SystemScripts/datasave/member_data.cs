@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class member_data : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class member_data : MonoBehaviour
     //2번은 현재 판에서만 사용하는 데이터. 이후 play 데이터
     //멤버는 game과 play 모두 가지고 있기 때문에 따로 저장과 불러오기를 만들었다.
     //최초 실행시 (데이터가 없는 경우) 로드를 하면 오류가 생기는데 원인불명
-    
+
     //game데이터의 종류 : 멤버들의 등급, 능력치
     //play데이터의 종류 : 멤버들의 현재 체력, 리타이어 여부
     //리스트를 사용하여 각 멤버들에게 접근하도록 하였다.
@@ -28,20 +29,27 @@ public class member_data : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //game부분의 멤버데이터 관리
     public void gamedata_set()
     {
-        dataManager.gameData.ranks = new List<Rank>(5);
-        dataManager.gameData.character_Statuses = new List<Character_Status>(5);
-        for (int i = 0; i < Gamemanager.GetInstance().members.Count; i++)
+        if (File.Exists(dataManager.GameData_FilePath))  // 게임 데이터가 있다면
         {
-            dataManager.gameData.ranks.Add(Gamemanager.GetInstance().members[i].rank);
-            dataManager.gameData.character_Statuses.Add(Gamemanager.GetInstance().members[i].character_Status);
+            gamedata_save();
         }
-        gamedata_save();
+        else // 게임 데이터가 없다면
+        {
+            dataManager.gameData.ranks = new List<Rank>(5);
+            dataManager.gameData.character_Statuses = new List<Character_Status>(5);
+            for (int i = 0; i < Gamemanager.GetInstance().members.Count; i++)
+            {
+                dataManager.gameData.ranks.Add(Gamemanager.GetInstance().members[i].rank);
+                dataManager.gameData.character_Statuses.Add(Gamemanager.GetInstance().members[i].character_Status);
+            }
+            gamedata_save();
+        }
     }
 
     public void gamedata_save()
@@ -57,15 +65,22 @@ public class member_data : MonoBehaviour
 
     public void gamedata_load()
     {
-        dataManager.LoadGameData();
-
-        for (int i = 0; i < Gamemanager.GetInstance().members.Count; i++)
+        if (File.Exists(dataManager.GameData_FilePath))
         {
-            (Gamemanager.GetInstance().members[i].rank) = dataManager.gameData.ranks[i];
-            (Gamemanager.GetInstance().members[i].character_Status) = dataManager.gameData.character_Statuses[i];
-        }
+            dataManager.LoadGameData();
 
-        Debug.Log("게임 데이터 로드 성공");
+            for (int i = 0; i < Gamemanager.GetInstance().members.Count; i++)
+            {
+                (Gamemanager.GetInstance().members[i].rank) = dataManager.gameData.ranks[i];
+                (Gamemanager.GetInstance().members[i].character_Status) = dataManager.gameData.character_Statuses[i];
+            }
+
+            Debug.Log("게임 데이터 로드 성공");
+        }
+        else
+        {
+            Debug.Log("게임 데이터 로드 실패");
+        }
     }
 
 
@@ -97,7 +112,7 @@ public class member_data : MonoBehaviour
 
         for (int i = 0; i < Gamemanager.GetInstance().members.Count; i++)
         {
-           // Debug.Log(i + "번 이전" + Gamemanager.GetInstance().members[i].character_Status_play.Cur_Tired);
+            // Debug.Log(i + "번 이전" + Gamemanager.GetInstance().members[i].character_Status_play.Cur_Tired);
             //Gamemanager.GetInstance().members[i].character_Status_play.Cur_Tired = playDatamanager.playData.character_Status_Plays[i].Cur_Tired;
             //Debug.Log(i + "번" + playDatamanager.playData.character_Status_Plays[i].Cur_Tired);
             //Debug.Log(i + "번 이후" + Gamemanager.GetInstance().members[i].character_Status_play.Cur_Tired);
